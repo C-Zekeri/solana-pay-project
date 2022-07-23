@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import {useState, uaeEffect} from "react";
 import HeadComponent from '../components/Head';
 import { PublicKey } from '@solana/web3.js';
 import { useWallet } from '@solana/wallet-adapter-react';
@@ -10,24 +10,32 @@ const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`;
 
 const App = () => {
   const { walletAddress } = useWallet();
-  const [isConnected, setIsConnected] = useState(false);
+  const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    walletAddress && setIsConnected(true);
-  }, [walletAddress])
-
+    if (walletAddress) {
+      fetch(`/api/fetchProducts`)
+        .then(response => response.json())
+        .then(data => {
+          setProducts(data);
+          console.log("Products", data);
+        });
+    }
+  }, [walletAddress]);
 
   return (
     <div className="App">
       <HeadComponent />
       <div className="container">
         <header className="header-container">
-          <p className="header"> 😳 Buildspace Emoji Store 😈</p>
-          <p className="sub-text">The only emoji store that accepts sh*tcoins</p>
+          <p className="header"> Tiny Poems Store </p>
+          <p className="sub-text">Buy poetry art. We accept all kinds of coins.</p>
         </header>
 
         <main>
-          {isConnected && (
+          {walletAddress ? (
+            <p>Connected!</p>
+          ) : (
             <div className="connect-prompt">
               <img src="https://media.giphy.com/media/eSwGh3YK54JKU/giphy.gif" alt="emoji" />
               <div className="button-container">
